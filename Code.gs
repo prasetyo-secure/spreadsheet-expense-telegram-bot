@@ -29,63 +29,41 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
     var text = data.message.text;
     var id = data.message.chat.id;
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = today.getMonth();
-    var date = today.getDate();
 
-    switch(month) {
-      case 0 :
-        month = "Januari";
-        break;
-      case 1 :
-        month = "Februari";
-        break;
-      case 2 :
-        month = "Maret";
-        break;
-      case 3 :
-        month = "April";
-        break;
-      case 4 :
-        month = "Mei";
-        break;
-      case 5 :
-        month = "Juni";
-        break;
-      case 6 :
-        month = "Juli";
-        break;
-      case 7 :
-        month = "Agustus";
-        break;
-      case 8 :
-        month = "September";
-        break;
-      case 9 :
-        month = "Oktober";
-        break;
-      case 10 :
-        month = "November";
-        break;
-      case 11 :
-        month = "Desember";
-        break;
-    }
+    // Split the message by spaces.
+    var parts = text.split(" ");
+    
+    // Check if the message has exactly two parts.
+    if (parts.length === 2) {
+      // The first part is the amount.
+      var amount = parts[0];
+      // The second part is the description.
+      var description = parts[1];
 
-    var currentDate = date + " " + month + " " + year;
-    var comment = text.split("-");
-    var commentLength = comment.length;
+      // Get the current date and format it.
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = today.getMonth();
+      var date = today.getDate();
 
-    if (commentLength == 3) {
-      var sheetName = comment[0];
-      var sheet = SpreadsheetApp.openById(ssId).getSheetByName(sheetName) ? SpreadsheetApp.openById(ssId).getSheetByName(sheetName) : SpreadsheetApp.openById(ssId).insertSheet(sheetName);
-      var nominal = comment[1];
-      var description = comment[2];
-      sheet.appendRow([currentDate,nominal,description]);
-      var response = "Laporan tercatat, pada "+ currentDate + " sebanyak " + nominal + " telah digunakan untuk " + description
+      // Convert the month number to its name.
+      var monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      var currentMonth = monthNames[month];
+      var currentDate = date + " " + currentMonth + " " + year;
+
+      // Access the spreadsheet and the first sheet.
+      // Make sure to replace "[your spreadsheet id]" with your actual spreadsheet ID.
+      var sheet = SpreadsheetApp.openById(ssId).getSheets()[0];
+      
+      // Append the new row with the date, amount, and description.
+      sheet.appendRow([currentDate, amount, description]);
+      
+      // Send a confirmation message back to the user.
+      var response = "Laporan tercatat: " + amount + " telah digunakan untuk " + description + " pada " + currentDate;
+      sendText(id, response);
     } else {
-      var response = "Laporan tidak tercatat, ada kesalahan!"
+      // If the message format is incorrect, send an error message.
+      var response = "Laporan tidak tercatat. Pastikan formatnya benar: 'amount description'. Contoh: '200000 bensin'";
+      sendText(id, response);
     }
-    sendText(id, response);
 }
