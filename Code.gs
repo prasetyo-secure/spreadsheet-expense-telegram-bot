@@ -59,11 +59,11 @@ function doPost(e) {
       sheet.appendRow([currentDate, amount, description]);
       
       // Send a confirmation message back to the user.
-      var response = "Laporan tercatat: " + amount + " telah digunakan untuk " + description + " pada " + currentDate;
+      var response = "Note saved: " + amount + " has been used for " + description + " at " + currentDate;
       sendText(id, response);
     } else {
       // If the message format is incorrect, send an error message.
-      var response = "Laporan tidak tercatat. Pastikan formatnya benar: 'amount description'. Contoh: '200000 bensin'";
+      var response = "Note unsaved. Make sure the format is correct: 'amount description'. Example: '200000 gas'";
       sendText(id, response);
     }
 }
