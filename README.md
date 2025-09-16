@@ -27,3 +27,5 @@ This bot connects Telegram with Google Sheets using Google Apps Script. It allow
 4. **Set Telegram Webhook**  
    Use this URL format to set the webhook:
    ```
+   https://api.telegram.org/bot<your_token>/setWebhook?url=<your_webAppUrl>
+   ```
